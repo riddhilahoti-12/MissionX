@@ -81,5 +81,15 @@ missionx/
 
 ---
 
+## 📈 Project Progress
+
+- **Day 1:** Initial project setup, directory architecture, MongoDB schemas, and baseline seed data.
+- **Day 2:** 
+  - **Game Master Control Dashboard (`/dashboard`)**: Interactive command center featuring live multi-room selector, digital countdown clock with timer penalty engine, hardware actuator overrides (Solenoid door locks, Laser security grid, RFID antenna bypass, Sirens), ambient room lighting presets, simulated CCTV camera feed with thermal & night-vision modes, and live audit event stream.
+  - **Express.js Backend Boilerplate**: Configured Dotenv environment loading, Helmet security HTTP headers, CORS cross-origin resource sharing, custom Morgan HTTP request logging middleware, API health check endpoint (`/api/health`), and centralized error handling with 404 route handling.
+
+---
+
 ## Course Alignment
 Aligned with **25SC2008E (Full Stack Web Development)**: CO1 (Responsive Design), CO2 (Async DOM), CO3 (React State/Recharts), CO4 (Express REST APIs), CO5 (WebSockets/MQTT), CO6 (Microservices & Deployment).
+
