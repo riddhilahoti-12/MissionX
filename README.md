@@ -87,6 +87,10 @@ missionx/
 - **Day 2:** 
   - **Game Master Control Dashboard (`/dashboard`)**: Interactive command center featuring live multi-room selector, digital countdown clock with timer penalty engine, hardware actuator overrides (Solenoid door locks, Laser security grid, RFID antenna bypass, Sirens), ambient room lighting presets, simulated CCTV camera feed with thermal & night-vision modes, and live audit event stream.
   - **Express.js Backend Boilerplate**: Configured Dotenv environment loading, Helmet security HTTP headers, CORS cross-origin resource sharing, custom Morgan HTTP request logging middleware, API health check endpoint (`/api/health`), and centralized error handling with 404 route handling.
+  - **3D WebGL Escape Room Canvas (`EscapeRoomCanvas.tsx`)**: Built with Three.js rendering server racks, RFID keycard scanners, holographic neural net displays, solenoid vault doors, floating particle dust, dynamic cyberpunk neon lighting, and raycasted 3D object click inspection.
+  - **Cinematic Story Briefing & 3D Mission Engine (`/play/[missionId]`)**: Emergency Broadcast intro with 5-second countdown, embedded 3D room canvas, and interactive CS puzzles (A* Search Pathfinding grid visualizer, Neural Network weight balancer, SQL Vault query repair console).
+  - **Multi-Domain Mission Hub (`/missions`)**: Storefront catalog covering AI, DSA, IoT, Networks, Databases, and Cyber Security with game mode filters.
+  - **15-Metric Skill Radar & Performance Analytics (`/analytics`)**: Recharts Radar Chart tracking 15 ABET-mapped skill competencies with AI personal learning recommendations and PDF report exports.
 
 ---
 

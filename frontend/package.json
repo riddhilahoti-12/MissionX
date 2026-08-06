@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/three": "^0.185.4",
     "clsx": "^2.1.0",
     "framer-motion": "^11.0.8",
     "lucide-react": "^0.359.0",
@@ -17,7 +18,8 @@
     "react-dom": "^18.2.0",
     "recharts": "^2.12.3",
     "socket.io-client": "^4.7.5",
-    "tailwind-merge": "^2.2.1"
+    "tailwind-merge": "^2.2.1",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.28",
