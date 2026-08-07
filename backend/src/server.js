@@ -16,6 +16,7 @@ const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/auth.routes');
 const missionRoutes = require('./routes/mission.routes');
+const aiRoutes = require('./routes/ai.routes');
 
 const app = express();
 const server = http.createServer(app);
