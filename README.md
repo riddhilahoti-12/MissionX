@@ -1,4 +1,4 @@
-# MissionX – AI & IoT Enabled Educational Escape Room Platform
+# MissionX – AI & IoT Enabled Educational Escape Room Platform   
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20Node.js%20%7C%20Express%20%7C%20Socket.io%20%7C%20MQTT-blue)](https://github.com/)
@@ -91,9 +91,9 @@ missionx/
   - **Cinematic Story Briefing & 3D Mission Engine (`/play/[missionId]`)**: Emergency Broadcast intro with 5-second countdown, embedded 3D room canvas, and interactive CS puzzles (A* Search Pathfinding grid visualizer, Neural Network weight balancer, SQL Vault query repair console).
   - **Multi-Domain Mission Hub (`/missions`)**: Storefront catalog covering AI, DSA, IoT, Networks, Databases, and Cyber Security with game mode filters.
   - **15-Metric Skill Radar & Performance Analytics (`/analytics`)**: Recharts Radar Chart tracking 15 ABET-mapped skill competencies with AI personal learning recommendations and PDF report exports.
-- **Day 3:**
+- **Day 3:** 
   - **IoT ESP32 MQTT Telemetry & Auto-Validation Engine (`mqtt.js`)**: Bi-directional MQTT subscriber & publisher channels (`missionx/room/+/sensor`, `rfid`, `solenoid`) with automatic hardware key validation and actuator command publishing (`publishActuatorCommand`).
-  - **Context-Aware AI Hint Micro-Engine (`aiHintEngine.js` & `/api/ai/generate-hint`)**: Adaptive AI hint generator outputting Tier 1 (Subtle Clue), Tier 2 (Technical Formula), and Tier 3 (Direct Solution Step) hints with dynamic time penalty clock deductions.
+  - **Context-Aware AI Hint Micro-Engine (`aiHintEngine.js` & `/api/ai/generate-hint`)**: Adaptive AI hint generator outputting Tier 1 (Subtle Clue), Tier 2 (Technical Formula), and Tier 3 (Direct Solution Step) hints with dynamic time penalty clock deductions and under time pressuer.
   - **Multiplayer WebSockets Co-op Room Sync Engine (`gameSocket.js`)**: Real-time team roster synchronization (`team_roster_updated`), 3D object inspection target broadcasts (`teammate_inspecting`), stage advancement synchronization (`team_stage_advanced`), and tactical team chat pings (`team_ping_received`).
 
 ---
