@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import EscapeRoomCanvas from '@/components/3d/EscapeRoomCanvas';
+import { io, Socket } from 'socket.io-client';
 import {
   Shield,
   Clock,
@@ -21,12 +22,24 @@ import {
   Unlock,
   Volume2,
   Activity,
+  Users,
+  MessageSquare,
+  Lightbulb,
+  Send,
+  HelpCircle,
 } from 'lucide-react';
 
 interface MissionPlayProps {
   params: {
     missionId: string;
   };
+}
+
+interface TeamPlayer {
+  socketId: string;
+  userName: string;
+  userRole: string;
+  inspectingObject: string | null;
 }
 
 export default function MissionPlayPage({ params }: MissionPlayProps) {
@@ -40,22 +53,71 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [solenoidLocked, setSolenoidLocked] = useState(true);
 
+  // WebSockets & Co-op Multiplayer State
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [teamPlayers, setTeamPlayers] = useState<TeamPlayer[]>([
+    { socketId: 'self', userName: 'Agent Maverick (You)', userRole: 'Lead Architect', inspectingObject: null },
+    { socketId: 'p2', userName: 'Agent Alex', userRole: 'Cryptographer', inspectingObject: 'A* Mainframe' },
+  ]);
+  const [teamPings, setTeamPings] = useState<Array<{ id: string; user: string; text: string; time: string }>>([
+    { id: '1', user: 'Agent Alex', text: 'Initiating A* Search heuristic evaluation...', time: new Date().toLocaleTimeString() },
+  ]);
+
+  // AI Hint Drawer State
+  const [showAiHintDrawer, setShowAiHintDrawer] = useState(false);
+  const [selectedHintTier, setSelectedHintTier] = useState<1 | 2 | 3>(1);
+  const [activeAiHint, setActiveAiHint] = useState<string | null>(null);
+  const [isGeneratingHint, setIsGeneratingHint] = useState(false);
+
   // Active Interactive Puzzle Modal State
   const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | null>(null);
 
   // Interactive Puzzle States
-  // A* Puzzle State
   const [astarPath, setAstarPath] = useState<number[]>([0]);
   const [astarSolved, setAstarSolved] = useState(false);
-
-  // Neural Net State
   const [weight1, setWeight1] = useState(0.4);
   const [weight2, setWeight2] = useState(0.6);
   const [neuralSolved, setNeuralSolved] = useState(false);
-
-  // SQL Query State
   const [sqlQuery, setSqlQuery] = useState("SELECT * FROM patients WHERE status = 'LOCKED';");
   const [sqlSolved, setSqlSolved] = useState(false);
+
+  // WebSockets Connection Effect
+  useEffect(() => {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const newSocket = io(backendUrl, { autoConnect: true });
+
+    newSocket.on('connect', () => {
+      console.log('[Frontend Socket] Connected to backend WebSockets server');
+      newSocket.emit('join_session', {
+        sessionCode: 'ROOM_101',
+        userName: 'Agent Maverick',
+        userRole: 'Lead Architect',
+      });
+    });
+
+    newSocket.on('team_roster_updated', ({ players }: { players: TeamPlayer[] }) => {
+      if (players && players.length > 0) setTeamPlayers(players);
+    });
+
+    newSocket.on('stage_auto_validated', ({ unlockedStage, message }: { unlockedStage: number; message: string }) => {
+      setStage((prev) => Math.max(prev, unlockedStage));
+      setSolenoidLocked(false);
+      setTeamPings((prev) => [
+        { id: Math.random().toString(), user: 'MQTT SENSOR ENGINE', text: message, time: new Date().toLocaleTimeString() },
+        ...prev,
+      ]);
+    });
+
+    newSocket.on('team_ping_received', ({ userName, message, timestamp }: { userName: string; message: string; timestamp: string }) => {
+      setTeamPings((prev) => [{ id: Math.random().toString(), user: userName, text: message, time: timestamp }, ...prev]);
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   // Cinematic Countdown Timer Effect
   useEffect(() => {
@@ -83,6 +145,10 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
 
   // Object Raycast Click Handler
   const handleObjectClick = (objectName: string) => {
+    if (socket) {
+      socket.emit('inspect_object', { sessionCode: 'ROOM_101', objectName, userName: 'Agent Maverick' });
+    }
+
     if (objectName.includes('RFID')) {
       setActivePuzzle('RFID');
     } else if (objectName.includes('A* Search')) {
@@ -94,11 +160,52 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
     }
   };
 
+  // AI Hint Micro-Engine Request Handler
+  const handleRequestAiHint = async (tier: 1 | 2 | 3) => {
+    setIsGeneratingHint(true);
+    setSelectedHintTier(tier);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/ai/generate-hint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          domain: 'ARTIFICIAL_INTELLIGENCE',
+          stage,
+          tier,
+          failedAttempts: 1,
+          timeSpentSeconds: 240,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setActiveAiHint(data.hintText);
+        setSecondsLeft((prev) => Math.max(0, prev - data.penaltyMinutes * 60));
+      } else {
+        setActiveAiHint('[AI Assistant] Focus on verifying node distances against target parameters.');
+      }
+    } catch (err) {
+      // Offline / fallback hint
+      const fallback = tier === 1 
+        ? '[AI Subtle Clue] Recall f(n) = g(n) + h(n). Calculate straight line distance.'
+        : tier === 2 
+        ? '[AI Technical Hint] Manhattan distance is |2-5| + |1-5| = 7. Select option 7.'
+        : '[AI Solution Step] Swipe RFID Card Tag 7 or click A* Option h(n)=7 to disengage lock.';
+      setActiveAiHint(fallback);
+    } finally {
+      setIsGeneratingHint(false);
+    }
+  };
+
   // Puzzle Solvers
   const handleSolveAstar = () => {
     setAstarSolved(true);
     setStage(Math.max(stage, 2));
     setActivePuzzle(null);
+    if (socket) {
+      socket.emit('stage_cleared', { sessionCode: 'ROOM_101', stageNumber: 1, clearedBy: 'Agent Maverick' });
+    }
   };
 
   const handleSolveNeural = () => {
@@ -106,6 +213,9 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       setNeuralSolved(true);
       setStage(Math.max(stage, 3));
       setActivePuzzle(null);
+      if (socket) {
+        socket.emit('stage_cleared', { sessionCode: 'ROOM_101', stageNumber: 2, clearedBy: 'Agent Maverick' });
+      }
     }
   };
 
@@ -115,10 +225,12 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       setStage(4);
       setSolenoidLocked(false);
       setActivePuzzle(null);
+      if (socket) {
+        socket.emit('stage_cleared', { sessionCode: 'ROOM_101', stageNumber: 3, clearedBy: 'Agent Maverick' });
+      }
     }
   };
 
-  // Format Time Helper
   const formatTime = (totalSecs: number) => {
     const mins = Math.floor(totalSecs / 60);
     const secs = totalSecs % 60;
@@ -153,7 +265,6 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
               </span>
             </p>
 
-            {/* Big Countdown Timer */}
             <div className="space-y-2">
               <span className="text-xs font-mono uppercase text-slate-400 tracking-widest">MISSION INITIATION IN</span>
               <div className="text-7xl font-black font-mono text-cyan-400 animate-pulse shadow-[0_0_30px_rgba(0,240,255,0.4)]">
@@ -191,8 +302,8 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
             </div>
           </div>
 
-          {/* Clock & Stage Indicators */}
-          <div className="flex items-center space-x-6">
+          {/* Clock, Stage, and AI Hint Request Button */}
+          <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2 bg-slate-900/90 border border-slate-800 px-4 py-2 rounded-xl">
               <Clock className="w-4 h-4 text-cyan-400 animate-pulse" />
               <span className="font-mono text-xl font-black text-cyan-400 tracking-wider">
@@ -204,10 +315,18 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
               <Activity className="w-4 h-4 text-purple-400" />
               <span>STAGE {stage} OF 4</span>
             </div>
+
+            <button
+              onClick={() => setShowAiHintDrawer(!showAiHintDrawer)}
+              className="px-3.5 py-2 rounded-xl font-mono text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 flex items-center space-x-1.5 transition-all shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+            >
+              <Lightbulb className="w-4 h-4 text-amber-400 animate-pulse" />
+              <span>AI HINT ENGINE</span>
+            </button>
           </div>
         </div>
 
-        {/* 3D Escape Room Canvas & HUD Column Layout */}
+        {/* 3D Escape Room Canvas & Sidebar Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* 3D WebGL Canvas Viewport (8 Columns) */}
           <div className="lg:col-span-8 flex flex-col space-y-4">
@@ -216,20 +335,46 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
             </div>
           </div>
 
-          {/* Side Mission Objectives & Sensor Feeds (4 Columns) */}
+          {/* Side Mission Objectives, Co-op Team Roster & Pings (4 Columns) */}
           <div className="lg:col-span-4 space-y-6">
-            {/* Stage Objectives Checklist */}
-            <div className="glass-panel p-5 rounded-2xl border-cyan-500/20 space-y-4">
+            {/* Live Co-op Team Roster */}
+            <div className="glass-panel p-5 rounded-2xl border-cyan-500/20 space-y-3">
               <h3 className="text-xs font-mono uppercase text-cyan-400 tracking-wider font-bold flex items-center justify-between">
-                <span>Room Objectives</span>
-                <Sparkles className="w-4 h-4 text-cyan-400" />
+                <span>Co-op Team Roster</span>
+                <Users className="w-4 h-4 text-cyan-400" />
               </h3>
 
-              <div className="space-y-3 font-mono text-xs">
-                {/* Obj 1 */}
+              <div className="space-y-2 font-mono text-xs">
+                {teamPlayers.map((player) => (
+                  <div key={player.socketId} className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                      <div>
+                        <span className="block font-bold text-slate-200">{player.userName}</span>
+                        <span className="text-[10px] text-slate-500">{player.userRole}</span>
+                      </div>
+                    </div>
+                    {player.inspectingObject && (
+                      <span className="text-[10px] text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30">
+                        {player.inspectingObject}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Stage Objectives Checklist */}
+            <div className="glass-panel p-5 rounded-2xl border-purple-500/20 space-y-3">
+              <h3 className="text-xs font-mono uppercase text-purple-400 tracking-wider font-bold flex items-center justify-between">
+                <span>Room Objectives</span>
+                <Sparkles className="w-4 h-4 text-purple-400" />
+              </h3>
+
+              <div className="space-y-2 font-mono text-xs">
                 <div
                   onClick={() => setActivePuzzle('RFID')}
-                  className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                  className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                     stage >= 1 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-400'
                   }`}
                 >
@@ -240,10 +385,9 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
                   <span className="text-[10px] text-emerald-400 font-bold">DONE</span>
                 </div>
 
-                {/* Obj 2 */}
                 <div
                   onClick={() => setActivePuzzle('ASTAR')}
-                  className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                  className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                     astarSolved ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-700 text-slate-200'
                   }`}
                 >
@@ -254,10 +398,9 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
                   <span className="text-[10px] font-bold">{astarSolved ? 'SOLVED' : 'ACTIVE'}</span>
                 </div>
 
-                {/* Obj 3 */}
                 <div
                   onClick={() => setActivePuzzle('NEURAL')}
-                  className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                  className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                     neuralSolved ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-400'
                   }`}
                 >
@@ -268,10 +411,9 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
                   <span className="text-[10px] font-bold">{neuralSolved ? 'SOLVED' : 'LOCKED'}</span>
                 </div>
 
-                {/* Obj 4 */}
                 <div
                   onClick={() => setActivePuzzle('SQL')}
-                  className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                  className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                     sqlSolved ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-400'
                   }`}
                 >
@@ -284,35 +426,83 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
               </div>
             </div>
 
-            {/* Real-time MQTT Sensor Telemetry */}
-            <div className="glass-panel p-5 rounded-2xl border-purple-500/20 space-y-3">
-              <h3 className="text-xs font-mono uppercase text-purple-400 tracking-wider font-bold flex items-center justify-between">
-                <span>Hardware Telemetry</span>
-                <Radio className="w-4 h-4 text-purple-400 animate-ping" />
+            {/* Live Team Chat Pings Stream */}
+            <div className="glass-panel p-5 rounded-2xl border-slate-800 space-y-3 h-[200px] flex flex-col justify-between">
+              <h3 className="text-xs font-mono uppercase text-slate-400 tracking-wider font-bold flex items-center justify-between">
+                <span>Team Tactical Log</span>
+                <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
               </h3>
 
-              <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-xs space-y-2">
-                <div className="flex justify-between text-slate-400">
-                  <span>ESP32 Sensor Array:</span>
-                  <span className="text-emerald-400">CONNECTED</span>
-                </div>
-                <div className="flex justify-between text-slate-400">
-                  <span>Solenoid Vault Lock:</span>
-                  <span className={solenoidLocked ? 'text-red-400' : 'text-emerald-400'}>
-                    {solenoidLocked ? 'LOCKED' : 'UNLOCKED'}
-                  </span>
-                </div>
-                <div className="flex justify-between text-slate-400">
-                  <span>Laser Security Grid:</span>
-                  <span className="text-amber-400">ARMED (0 Tripped)</span>
-                </div>
+              <div className="flex-1 bg-slate-950 rounded-xl p-2.5 font-mono text-[11px] overflow-y-auto space-y-1.5 border border-slate-800">
+                {teamPings.map((ping) => (
+                  <div key={ping.id} className="text-slate-300 border-b border-slate-900 pb-1">
+                    <span className="text-cyan-400 font-bold">[{ping.user}]: </span>
+                    <span className="text-slate-400">{ping.text}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Interactive Puzzle Modal Overlays */}
+      {/* AI Context-Aware Hint Drawer */}
+      {showAiHintDrawer && (
+        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-slate-950/95 border-l border-amber-500/30 p-6 flex flex-col justify-between shadow-2xl backdrop-blur-xl">
+          <div className="space-y-6">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-4">
+              <div className="flex items-center space-x-2 text-amber-400">
+                <Lightbulb className="w-5 h-5 animate-pulse" />
+                <h3 className="font-mono font-bold text-base text-white">AI HINT MICRO-ENGINE</h3>
+              </div>
+              <button onClick={() => setShowAiHintDrawer(false)} className="text-slate-400 hover:text-white">✕</button>
+            </div>
+
+            <p className="text-xs font-mono text-slate-400 leading-relaxed">
+              Request dynamic, context-aware AI hints tailored to Stage {stage}. Selecting higher tiers incurs clock time deductions.
+            </p>
+
+            {/* Hint Tier Selector */}
+            <div className="space-y-3 font-mono text-xs">
+              {[
+                { tier: 1, label: 'Tier 1: Subtle Conceptual Clue', penalty: '-1 min clock penalty' },
+                { tier: 2, label: 'Tier 2: Technical Formula Nudge', penalty: '-3 min clock penalty' },
+                { tier: 3, label: 'Tier 3: Direct Solution Step', penalty: '-5 min clock penalty' },
+              ].map((item) => (
+                <button
+                  key={item.tier}
+                  onClick={() => handleRequestAiHint(item.tier as 1 | 2 | 3)}
+                  className={`w-full p-3 rounded-xl border text-left transition-all ${
+                    selectedHintTier === item.tier
+                      ? 'bg-amber-500/20 border-amber-400 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <span className="block font-bold text-slate-200">{item.label}</span>
+                  <span className="text-[10px] text-amber-400">{item.penalty}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* AI Generated Hint Box */}
+            {activeAiHint && (
+              <div className="bg-slate-900 p-4 rounded-2xl border border-amber-500/40 text-xs font-mono text-amber-300 space-y-2">
+                <span className="text-[10px] uppercase font-bold text-amber-400 block">GENERATED AI HINT OUTPUT:</span>
+                <p className="leading-relaxed">{activeAiHint}</p>
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={() => setShowAiHintDrawer(false)}
+            className="w-full py-3 rounded-xl font-bold font-mono text-xs bg-slate-800 hover:bg-slate-700 text-slate-200"
+          >
+            RETURN TO 3D VAULT
+          </button>
+        </div>
+      )}
+
+      {/* Interactive Puzzle Modals (A*, Neural, SQL) */}
       {activePuzzle === 'ASTAR' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="glass-panel p-6 rounded-3xl border-indigo-500/40 max-w-lg w-full space-y-6">
@@ -328,7 +518,6 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
               Find the optimal shortest path through the hazard grid avoiding obstacles. Select nodes from Start (0,0) to Goal (3,3).
             </p>
 
-            {/* 4x4 Grid Visualizer */}
             <div className="grid grid-cols-4 gap-2 bg-slate-950 p-4 rounded-2xl border border-slate-800">
               {Array.from({ length: 16 }).map((_, idx) => {
                 const isSelected = astarPath.includes(idx);
