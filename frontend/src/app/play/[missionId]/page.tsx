@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import EscapeRoomCanvas from '@/components/3d/EscapeRoomCanvas';
+import SubnetRoutingPuzzle from '@/components/puzzles/SubnetRoutingPuzzle';
+import AvlTreePuzzle from '@/components/puzzles/AvlTreePuzzle';
 import { io, Socket } from 'socket.io-client';
 import {
   Shield,
@@ -70,7 +72,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -639,6 +641,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
               RUN QUERY & UNLOCK VAULT DOOR
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Subnetting & Packet Routing Puzzle Modal */}
+      {activePuzzle === 'SUBNET' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <SubnetRoutingPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* AVL Tree Rotation Puzzle Modal */}
+      {activePuzzle === 'TREE' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <AvlTreePuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
         </div>
       )}
     </div>
