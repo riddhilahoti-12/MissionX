@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Cpu, Shield, Activity, Terminal, User, BarChart3 } from 'lucide-react';
+import { Cpu, Shield, Activity, Terminal, User, BarChart3, Trophy, Sparkles } from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -16,12 +16,12 @@ export default function Navbar() {
               MISSION<span className="text-cyan-400">X</span>
             </span>
             <span className="block text-[9px] tracking-widest uppercase text-cyan-500/80 font-mono">
-              AAA 3D Educational Engine
+              AAA 3D Educational Platform
             </span>
           </div>
         </a>
 
-        <nav className="flex items-center space-x-6">
+        <nav className="flex items-center space-x-5">
           <a href="/dashboard" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
             <Shield className="w-4 h-4 text-cyan-400" />
             Dashboard
@@ -30,12 +30,20 @@ export default function Navbar() {
             <Activity className="w-4 h-4 text-purple-400" />
             Missions
           </a>
+          <a href="/leaderboard" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+            <Trophy className="w-4 h-4 text-amber-400" />
+            Leaderboard
+          </a>
+          <a href="/creator" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-cyan-300" />
+            Creator Studio
+          </a>
           <a href="/analytics" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
             <BarChart3 className="w-4 h-4 text-pink-400" />
             Analytics
           </a>
           <a href="/simulator" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
-            <Terminal className="w-4 h-4 text-amber-400" />
+            <Terminal className="w-4 h-4 text-emerald-400" />
             IoT Simulator
           </a>
           <div className="w-px h-5 bg-slate-800" />
