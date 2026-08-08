@@ -95,6 +95,11 @@ missionx/
   - **IoT ESP32 MQTT Telemetry & Auto-Validation Engine (`mqtt.js`)**: Bi-directional MQTT subscriber & publisher channels (`missionx/room/+/sensor`, `rfid`, `solenoid`) with automatic hardware key validation and actuator command publishing (`publishActuatorCommand`).
   - **Context-Aware AI Hint Micro-Engine (`aiHintEngine.js` & `/api/ai/generate-hint`)**: Adaptive AI hint generator outputting Tier 1 (Subtle Clue), Tier 2 (Technical Formula), and Tier 3 (Direct Solution Step) hints with dynamic time penalty clock deductions and under time pressuer.
   - **Multiplayer WebSockets Co-op Room Sync Engine (`gameSocket.js`)**: Real-time team roster synchronization (`team_roster_updated`), 3D object inspection target broadcasts (`teammate_inspecting`), stage advancement synchronization (`team_stage_advanced`), and tactical team chat pings (`team_ping_received`).
+- **Day 4:**
+  - **Computer Networks VLSM Subnetting & Packet Router Puzzle (`SubnetRoutingPuzzle.tsx`)**: Interactive CIDR netmask calculator (/24, /25, /26, /28) and Gateway router assigner for emergency packet stream restoration.
+  - **Self-Balancing AVL & BST Tree Rotation Visualizer (`AvlTreePuzzle.tsx`)**: Interactive tree balance factor visualizer supporting LL, RR, LR, RL single/double rotations to restore O(log N) search speed.
+  - **Global & Institutional Leaderboards & Badges Vault (`/leaderboard`)**: National team rankings by escape time, XP, coins, and accuracy %, featuring an unlockable player badge showcase (*A\* Pathfinding Master, Neural Calibrator, SQL Cipher Cracker, IoT Circuit Specialist, Speedrunner Elite*).
+  - **Educator Mission Creator Studio (`/creator`)**: *"The Steam Workshop for Escape Rooms"* allowing instructors to configure custom missions, room stages, challenge mechanics, and MQTT hardware sensor mappings without writing code.
 
 ---
 
