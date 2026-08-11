@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Cpu, Shield, Activity, Terminal, User, BarChart3, Trophy, Sparkles } from 'lucide-react';
+import { Cpu, Shield, Activity, Terminal, User, BarChart3, Trophy, Sparkles, ShoppingBag, FileText } from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -21,7 +21,7 @@ export default function Navbar() {
           </div>
         </a>
 
-        <nav className="flex items-center space-x-5">
+        <nav className="flex items-center space-x-4">
           <a href="/dashboard" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
             <Shield className="w-4 h-4 text-cyan-400" />
             Dashboard
@@ -36,15 +36,23 @@ export default function Navbar() {
           </a>
           <a href="/creator" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-cyan-300" />
-            Creator Studio
+            Creator
+          </a>
+          <a href="/store" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+            <ShoppingBag className="w-4 h-4 text-emerald-400" />
+            Store
+          </a>
+          <a href="/assessment" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+            <FileText className="w-4 h-4 text-purple-300" />
+            Assessment
           </a>
           <a href="/analytics" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
             <BarChart3 className="w-4 h-4 text-pink-400" />
             Analytics
           </a>
           <a href="/simulator" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
-            <Terminal className="w-4 h-4 text-emerald-400" />
-            IoT Simulator
+            <Terminal className="w-4 h-4 text-amber-400" />
+            Simulator
           </a>
           <div className="w-px h-5 bg-slate-800" />
           <a
