@@ -5,6 +5,8 @@ import Navbar from '@/components/Navbar';
 import EscapeRoomCanvas from '@/components/3d/EscapeRoomCanvas';
 import SubnetRoutingPuzzle from '@/components/puzzles/SubnetRoutingPuzzle';
 import AvlTreePuzzle from '@/components/puzzles/AvlTreePuzzle';
+import CipherPuzzle from '@/components/puzzles/CipherPuzzle';
+import SqlJoinPuzzle from '@/components/puzzles/SqlJoinPuzzle';
 import { io, Socket } from 'socket.io-client';
 import {
   Shield,
@@ -72,7 +74,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -661,6 +663,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'TREE' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <AvlTreePuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Cyber Security XOR Cryptography Cipher Decoder Modal */}
+      {activePuzzle === 'CIPHER' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <CipherPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Multi-Table Relational SQL Join Modal */}
+      {activePuzzle === 'SQLJOIN' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <SqlJoinPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
