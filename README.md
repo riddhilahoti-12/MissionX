@@ -100,6 +100,11 @@ missionx/
   - **Self-Balancing AVL & BST Tree Rotation Visualizer (`AvlTreePuzzle.tsx`)**: Interactive tree balance factor visualizer supporting LL, RR, LR, RL single/double rotations to restore O(log N) search speed.
   - **Global & Institutional Leaderboards & Badges Vault (`/leaderboard`)**: National team rankings by escape time, XP, coins, and accuracy %, featuring an unlockable player badge showcase (*A\* Pathfinding Master, Neural Calibrator, SQL Cipher Cracker, IoT Circuit Specialist, Speedrunner Elite*).
   - **Educator Mission Creator Studio (`/creator`)**: *"The Steam Workshop for Escape Rooms"* allowing instructors to configure custom missions, room stages, challenge mechanics, and MQTT hardware sensor mappings without writing code.
+- **Day 5:**
+  - **Cyber Security XOR Cryptography Cipher Decoder (`CipherPuzzle.tsx`)**: Bitwise XOR key shifting and hex checksum verification to decode ransomware telemetry payloads.
+  - **Multi-Table Relational SQL Join Console (`SqlJoinPuzzle.tsx`)**: Interactive SQL builder connecting `patients` and `vault_keys` via `INNER JOIN` and transaction rollbacks.
+  - **Gamification Rewards Store & Inventory Vault (`/store`)**: In-game marketplace to spend earned Coins and XP on Power-ups (*Time Freeze Chrono Tokens, Hardware Sensor Auto-Bypass, Cyber Thermal 3D Scanners, Neon Valkyrie Avatars, Holographic Titles*).
+  - **Institutional Assessment & PDF Report Suite (`/assessment`)**: Automated ABET CO1-CO6 Outcome Matrix mapping student escape room performance metrics with downloadable PDF Skill Radar Certificates.
 
 ---
 
