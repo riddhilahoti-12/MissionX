@@ -7,6 +7,9 @@ import SubnetRoutingPuzzle from '@/components/puzzles/SubnetRoutingPuzzle';
 import AvlTreePuzzle from '@/components/puzzles/AvlTreePuzzle';
 import CipherPuzzle from '@/components/puzzles/CipherPuzzle';
 import SqlJoinPuzzle from '@/components/puzzles/SqlJoinPuzzle';
+import PageReplacementPuzzle from '@/components/puzzles/PageReplacementPuzzle';
+import DpKnapsackPuzzle from '@/components/puzzles/DpKnapsackPuzzle';
+import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { io, Socket } from 'socket.io-client';
 import {
   Shield,
@@ -74,7 +77,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -690,6 +693,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'SQLJOIN' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <SqlJoinPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* OS Page Replacement Visualizer Modal */}
+      {activePuzzle === 'PAGEREPLACEMENT' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <PageReplacementPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Dynamic Programming Knapsack Modal */}
+      {activePuzzle === 'KNAPSACK' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <DpKnapsackPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
