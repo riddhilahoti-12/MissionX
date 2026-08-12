@@ -105,6 +105,11 @@ missionx/
   - **Multi-Table Relational SQL Join Console (`SqlJoinPuzzle.tsx`)**: Interactive SQL builder connecting `patients` and `vault_keys` via `INNER JOIN` and transaction rollbacks.
   - **Gamification Rewards Store & Inventory Vault (`/store`)**: In-game marketplace to spend earned Coins and XP on Power-ups (*Time Freeze Chrono Tokens, Hardware Sensor Auto-Bypass, Cyber Thermal 3D Scanners, Neon Valkyrie Avatars, Holographic Titles*).
   - **Institutional Assessment & PDF Report Suite (`/assessment`)**: Automated ABET CO1-CO6 Outcome Matrix mapping student escape room performance metrics with downloadable PDF Skill Radar Certificates.
+- **Day 6:**
+  - **OS Virtual Memory Page Replacement Visualizer (`PageReplacementPuzzle.tsx`)**: Simulate LRU (Least Recently Used), FIFO, and Optimal page fault replacement algorithms to clear virtual memory thrashing.
+  - **Dynamic Programming 0/1 Knapsack & Memoization Matrix Visualizer (`DpKnapsackPuzzle.tsx`)**: Interactive DP table solver filling subproblem memoization grid `dp[n][W]` to pack maximum payload value under 50MB bandwidth limit.
+  - **Web Audio API Sci-Fi Sound Synthesizer Engine (`SoundEffectsEngine.ts`)**: Procedural audio frequency generator producing UI click tones, solenoid vault unlock chimes, alarm sirens, and countdown ticks without external assets.
+  - **Multi-Environment 3D Escape Room Canvas Switcher (`EscapeRoomCanvas.tsx`)**: 3D scene switcher allowing live environment toggling across Cyber Vault, Submarine Station, Hospital ICU, and Smart City Hub.
 
 ---
 
