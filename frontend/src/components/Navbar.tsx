@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Cpu, Shield, Activity, Terminal, User, BarChart3, Trophy, Sparkles, ShoppingBag, FileText } from 'lucide-react';
+import { Cpu, Shield, Activity, Terminal, User, BarChart3, Trophy, Sparkles, ShoppingBag, FileText, Swords } from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -46,17 +46,17 @@ export default function Navbar() {
             <FileText className="w-4 h-4 text-purple-300" />
             Assessment
           </a>
+          <a href="/tournament" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+            <Swords className="w-4 h-4 text-red-400" />
+            Tournament
+          </a>
           <a href="/analytics" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
             <BarChart3 className="w-4 h-4 text-pink-400" />
             Analytics
           </a>
-          <a href="/simulator" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
-            <Terminal className="w-4 h-4 text-amber-400" />
-            Simulator
-          </a>
           <div className="w-px h-5 bg-slate-800" />
           <a
-            href="/analytics"
+            href="/profile"
             className="flex items-center space-x-2 px-3 py-1.5 rounded-lg glass-panel hover:border-cyan-400/50 text-xs font-mono text-cyan-300 transition-colors"
           >
             <User className="w-3.5 h-3.5" />
