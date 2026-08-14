@@ -9,6 +9,8 @@ import CipherPuzzle from '@/components/puzzles/CipherPuzzle';
 import SqlJoinPuzzle from '@/components/puzzles/SqlJoinPuzzle';
 import PageReplacementPuzzle from '@/components/puzzles/PageReplacementPuzzle';
 import DpKnapsackPuzzle from '@/components/puzzles/DpKnapsackPuzzle';
+import GraphTraversalPuzzle from '@/components/puzzles/GraphTraversalPuzzle';
+import MinimaxPuzzle from '@/components/puzzles/MinimaxPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { io, Socket } from 'socket.io-client';
 import {
@@ -77,7 +79,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -720,6 +722,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'KNAPSACK' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <DpKnapsackPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Graph Traversal (BFS / DFS) Modal */}
+      {activePuzzle === 'GRAPH' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <GraphTraversalPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Minimax & Alpha-Beta Pruning Modal */}
+      {activePuzzle === 'MINIMAX' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <MinimaxPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
