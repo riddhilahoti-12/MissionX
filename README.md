@@ -110,6 +110,13 @@ missionx/
   - **Dynamic Programming 0/1 Knapsack & Memoization Matrix Visualizer (`DpKnapsackPuzzle.tsx`)**: Interactive DP table solver filling subproblem memoization grid `dp[n][W]` to pack maximum payload value under 50MB bandwidth limit.
   - **Web Audio API Sci-Fi Sound Synthesizer Engine (`SoundEffectsEngine.ts`)**: Procedural audio frequency generator producing UI click tones, solenoid vault unlock chimes, alarm sirens, and countdown ticks without external assets.
   - **Multi-Environment 3D Escape Room Canvas Switcher (`EscapeRoomCanvas.tsx`)**: 3D scene switcher allowing live environment toggling across Cyber Vault, Submarine Station, Hospital ICU, and Smart City Hub.
+- **Day 7:**
+  - **Graph Traversal Shortest Path Visualizer (`GraphTraversalPuzzle.tsx`)**: Interactive Breadth-First Search (BFS queue) and Depth-First Search (DFS stack) router traversal visualizer to discover shortest network hop path.
+  - **Game Theory Minimax & Alpha-Beta Pruning Visualizer (`MinimaxPuzzle.tsx`)**: Game tree node evaluator executing $\alpha \ge \beta$ branch cuts to defeat adversary AI bots in 3 turns.
+  - **Tournament PvP & Matchmaking Engine (`/tournament`)**: Head-to-Head real-time race arena with live team progress comparison bars, delta clocks, sabotage trap dispatches (*Screen Glitch, Laser Lock, Telemetry Jammer*), and live telemetry log stream.
+- **Day 8:**
+  - **User Profile Hub & Skill Passport (`/profile`)**: Student Agent passport featuring level progression, avatar customization selector, unlocked badges showcase (*A\* Pathfinding Master, Neural Calibrator, SQL Cipher Cracker, Speedrunner Elite*), and mission history timeline.
+  - **Official Verified Skill Radar Certificate Generator (`/certificate/[userId]`)**: Printable and downloadable institutional certificate featuring QR code verification, system hash `0x9F42A7`, ABET CO1-CO6 Outcome Matrix, and 15-skill radar score.
 
 ---
 
