@@ -11,7 +11,10 @@ import PageReplacementPuzzle from '@/components/puzzles/PageReplacementPuzzle';
 import DpKnapsackPuzzle from '@/components/puzzles/DpKnapsackPuzzle';
 import GraphTraversalPuzzle from '@/components/puzzles/GraphTraversalPuzzle';
 import MinimaxPuzzle from '@/components/puzzles/MinimaxPuzzle';
+import QuantumBb84Puzzle from '@/components/puzzles/QuantumBb84Puzzle';
+import CnnFilterPuzzle from '@/components/puzzles/CnnFilterPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
+import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
 import {
   Shield,
@@ -79,7 +82,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -749,6 +752,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'MINIMAX' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <MinimaxPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Quantum BB84 Key Distribution Modal */}
+      {activePuzzle === 'QUANTUM' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <QuantumBb84Puzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* CNN Convolution Filter Modal */}
+      {activePuzzle === 'CNN' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <CnnFilterPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
