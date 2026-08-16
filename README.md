@@ -125,6 +125,13 @@ missionx/
 - **Day 10:**
   - **Docker Containerization & Multi-Stage Deployment Suite (`docker-compose.yml`)**: Multi-stage Docker setup orchestrating Next.js Frontend, Express Backend, MongoDB, and Mosquitto MQTT Broker.
   - **Automated E2E System Verification Diagnostic Script (`verify_system.js`)**: Automated diagnostic script verifying REST API endpoints, AI microservices, MQTT channels, and build integrity.
+- **Day 11:**
+  - **Compiler Lexical Analyzer & AST Parser Visualizer (`CompilerAstPuzzle.tsx`)**: Interactive compiler visualizer tokenizing raw code strings into Lexical Tokens (`IDENTIFIER`, `OPERATOR`, `LITERAL`) and parsing root Abstract Syntax Trees (AST).
+  - **Distributed Systems Raft Consensus Protocol Visualizer (`RaftConsensusPuzzle.tsx`)**: Distributed systems cluster simulator executing Leader Election, Heartbeat Sync, and Quorum Majority commit logging across 5 cluster nodes.
+  - **Live Educator Spectator & Heatmap Console (`/spectator`)**: Classroom multi-team grid monitoring real-time team frustration levels, hint usage counts, and instant instructor time/hint intervention triggers.
+- **Day 12:**
+  - **Enterprise Multi-Tenancy & Institutional Admin Console (`/admin/tenants`)**: Multi-tenant domain manager isolating university campuses, custom institutional logos, and custom ABET CO outcome weighting.
+  - **GitHub Actions CI/CD Pipeline (`ci-cd.yml`)**: Automated CI/CD workflow testing TypeScript compilation, E2E system health diagnostics, and Docker build image verification.
 
 ---
 
