@@ -13,6 +13,8 @@ import GraphTraversalPuzzle from '@/components/puzzles/GraphTraversalPuzzle';
 import MinimaxPuzzle from '@/components/puzzles/MinimaxPuzzle';
 import QuantumBb84Puzzle from '@/components/puzzles/QuantumBb84Puzzle';
 import CnnFilterPuzzle from '@/components/puzzles/CnnFilterPuzzle';
+import CompilerAstPuzzle from '@/components/puzzles/CompilerAstPuzzle';
+import RaftConsensusPuzzle from '@/components/puzzles/RaftConsensusPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
@@ -82,7 +84,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -779,6 +781,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'CNN' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <CnnFilterPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Compiler Lexical Analyzer & AST Parser Modal */}
+      {activePuzzle === 'AST' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <CompilerAstPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Distributed Systems Raft Consensus Protocol Modal */}
+      {activePuzzle === 'RAFT' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <RaftConsensusPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
