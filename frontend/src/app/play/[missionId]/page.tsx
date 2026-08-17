@@ -15,6 +15,8 @@ import QuantumBb84Puzzle from '@/components/puzzles/QuantumBb84Puzzle';
 import CnnFilterPuzzle from '@/components/puzzles/CnnFilterPuzzle';
 import CompilerAstPuzzle from '@/components/puzzles/CompilerAstPuzzle';
 import RaftConsensusPuzzle from '@/components/puzzles/RaftConsensusPuzzle';
+import BlockchainPoWPuzzle from '@/components/puzzles/BlockchainPoWPuzzle';
+import MapReducePuzzle from '@/components/puzzles/MapReducePuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
@@ -84,7 +86,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -808,6 +810,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'RAFT' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <RaftConsensusPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Blockchain Proof-of-Work Modal */}
+      {activePuzzle === 'POW' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <BlockchainPoWPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Distributed MapReduce Pipeline Modal */}
+      {activePuzzle === 'MAPREDUCE' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <MapReducePuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
