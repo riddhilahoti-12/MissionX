@@ -1,0 +1,16 @@
+{
+  "name": "MissionX - AAA 3D Educational Platform",
+  "short_name": "MissionX",
+  "description": "AAA-Quality 3D Immersive Educational Escape Room Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#00F0FF",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
