@@ -145,6 +145,12 @@ missionx/
 - **Day 16 (Ultimate Platform Completion):**
   - **Automated ABET Accreditation Portfolio Exporter (`/admin/accreditation`)**: Institutional accreditation dashboard generating university ABET Self-Study Year-End PDF Portfolios with CO achievement histograms.
   - **Live System Diagnostic Monitor & Health Dashboard (`/admin/health`)**: Microservice health monitor tracking WebSockets latency (&lt;15ms), MQTT throughput, MongoDB connection pools, and Redis cache hit rates.
+- **Day 17:**
+  - **Federated Learning Privacy-Preserving AI Visualizer (`FederatedLearningPuzzle.tsx`)**: Decentralized ML gradient collector training local models and executing Secure Aggregation without raw data centralization.
+  - **Database B-Tree Index Node Balancing Visualizer (`BTreeIndexPuzzle.tsx`)**: Database indexing visualizer executing node key splits and median root promotions to optimize $O(\log_B N)$ disk I/O search speed.
+- **Day 18 (Omni-Channel Release):**
+  - **Keyboard Command Palette Navigation Hub (`CommandPalette.tsx`)**: Global `Ctrl+K` / `Cmd+K` keyboard shortcut popup enabling instant search and jump navigation across all 18 platform modules.
+  - **Progressive Web App Mobile Companion Engine (`manifest.json`)**: PWA Web Manifest enabling standalone mobile installation, haptic feedback alerts, and offline app caching.
 
 ---
 
