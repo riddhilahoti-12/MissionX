@@ -21,6 +21,8 @@ import PaxosConsensusPuzzle from '@/components/puzzles/PaxosConsensusPuzzle';
 import ZkpPuzzle from '@/components/puzzles/ZkpPuzzle';
 import FederatedLearningPuzzle from '@/components/puzzles/FederatedLearningPuzzle';
 import BTreeIndexPuzzle from '@/components/puzzles/BTreeIndexPuzzle';
+import RaftSnapshotPuzzle from '@/components/puzzles/RaftSnapshotPuzzle';
+import AutoencoderPuzzle from '@/components/puzzles/AutoencoderPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
@@ -90,7 +92,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -895,6 +897,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'BTREE' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <BTreeIndexPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Distributed Raft Log Compaction & Snapshotting Modal */}
+      {activePuzzle === 'RAFTSNAPSHOT' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <RaftSnapshotPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Convolutional Autoencoder Signal Denoising Modal */}
+      {activePuzzle === 'AUTOENCODER' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <AutoencoderPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
