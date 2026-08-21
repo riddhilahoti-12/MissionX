@@ -156,6 +156,11 @@ missionx/
   - **Convolutional Autoencoder Signal Denoising Visualizer (`AutoencoderPuzzle.tsx`)**: Deep learning visualizer passing noisy security video feeds through Encoder bottleneck and Decoder reconstruction layers.
 - **Day 20 (20-Day Master Milestone Completion):**
   - **Automated E2E 20-Day Master System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 20 Days of interactive CS puzzles, WebSockets multiplayer, and REST API microservices.
+- **Day 21:**
+  - **Transformer Self-Attention Matrix Visualizer (`TransformerAttentionPuzzle.tsx`)**: Deep learning visualizer computing Query (Q), Key (K), and Value (V) self-attention dot products to isolate adversarial prompt injection tokens.
+  - **Practical Byzantine Fault Tolerance (PBFT) Visualizer (`PbftConsensusPuzzle.tsx`)**: Distributed consensus simulator executing 3-phase PBFT (Pre-Prepare, Prepare, Commit) to tolerate up to $f = 1$ malicious Byzantine traitor nodes.
+- **Day 22 (Autonomous Self-Healing Milestone):**
+  - **Autonomous Infrastructure Self-Healing Watchdog (`selfHealingEngine.js`)**: Autonomous background service monitoring telemetry streams, WebSockets rooms, and database connections, executing auto-remediation logs.
 
 ---
 
