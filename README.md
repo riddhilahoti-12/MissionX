@@ -166,6 +166,10 @@ missionx/
   - **Vector Database RAG Cosine Similarity Visualizer (`VectorRagPuzzle.tsx`)**: High-dimensional embedding visualizer computing dot products and cosine similarity ($\cos(\theta) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|}$) for LLM query retrieval augmentation.
 - **Day 24 (24-Day Master Capstone Edition Finalization):**
   - **Automated E2E 24-Day Master Capstone System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 24 Days of interactive CS puzzles, WebSockets multiplayer, and REST API microservices.
+- **AI Tutor Chatbot Integration (OpenAI & Gemini APIs):**
+  - **Live AI Tutor Chatbot Micro-Engine (`aiChatbotService.js`)**: Multi-LLM AI Tutor service connecting OpenAI (`OPENAI_API_KEY`) and Google Gemini (`GEMINI_API_KEY`) APIs with live prompt resolution (`POST /api/ai/chat`).
+  - **LLM Model Specifications Engine**: Dynamic model specifications badge detailing context windows (128k vs 1M+), target latency (45ms–150ms), multimodal capabilities, and cost specs for GPT-4o, GPT-4o-mini, Gemini 1.5 Pro, and Gemini 1.5 Flash.
+  - **Floating HUD AI Tutor Widget (`AiTutorChatbot.tsx`)**: Interactive floating chatbot co-pilot HUD with live model selector dropdown, specification modal, and Web Speech API voice synthesis.
 
 ---
 
