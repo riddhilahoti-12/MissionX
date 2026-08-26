@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import CommandPalette from '@/components/ui/CommandPalette';
+import AiTutorChatbot from '@/components/ui/AiTutorChatbot';
 
 export const metadata: Metadata = {
   title: 'MissionX | AI & IoT Educational Escape Room Platform',
@@ -21,6 +22,7 @@ export default function RootLayout({
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
           
           <CommandPalette />
+          <AiTutorChatbot />
           <main className="flex-1 relative z-10">{children}</main>
         </div>
       </body>
