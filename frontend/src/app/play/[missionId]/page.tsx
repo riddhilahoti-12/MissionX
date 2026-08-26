@@ -27,6 +27,8 @@ import TransformerAttentionPuzzle from '@/components/puzzles/TransformerAttentio
 import PbftConsensusPuzzle from '@/components/puzzles/PbftConsensusPuzzle';
 import HomomorphicEncryptionPuzzle from '@/components/puzzles/HomomorphicEncryptionPuzzle';
 import VectorRagPuzzle from '@/components/puzzles/VectorRagPuzzle';
+import Ekert91EntanglementPuzzle from '@/components/puzzles/Ekert91EntanglementPuzzle';
+import RaftJointConsensusPuzzle from '@/components/puzzles/RaftJointConsensusPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
@@ -96,7 +98,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -982,6 +984,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'VECTORRAG' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <VectorRagPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Quantum Ekert91 Entanglement Modal */}
+      {activePuzzle === 'EKERT91' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <Ekert91EntanglementPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Raft Joint Consensus Reconfiguration Modal */}
+      {activePuzzle === 'RAFTJOINT' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <RaftJointConsensusPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
