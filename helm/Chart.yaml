@@ -1,0 +1,9 @@
+apiVersion: v2
+name: missionx-platform
+description: Helm Chart for MissionX AAA 3D Educational Escape Room Platform
+type: application
+version: 1.0.0
+appVersion: "26.0.0"
+maintainers:
+  - name: MissionX Core Engineering Team
+    email: devops@missionx.edu
