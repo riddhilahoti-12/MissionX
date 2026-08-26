@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { generateAIHint } = require('../services/aiHintEngine');
+const { generateTutorChatResponse, MODEL_SPECIFICATIONS } = require('../services/aiChatbotService');
 
 // @route POST /api/ai/generate-hint
 // Generate context-aware AI hint with penalty time calculation
@@ -24,6 +25,31 @@ router.post('/generate-hint', (req, res) => {
       error: error.message,
     });
   }
+});
+
+// @route POST /api/ai/chat
+// Live AI Tutor Chatbot for student doubts and assistance
+router.post('/chat', async (req, res) => {
+  try {
+    const { prompt, model, domain, stage } = req.body;
+    const chatData = await generateTutorChatResponse({ prompt, model, domain, stage });
+    res.json(chatData);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to process AI tutor chat prompt',
+      error: error.message,
+    });
+  }
+});
+
+// @route GET /api/ai/models
+// Get available OpenAI and Gemini LLM model specifications
+router.get('/models', (req, res) => {
+  res.json({
+    success: true,
+    models: MODEL_SPECIFICATIONS,
+  });
 });
 
 // @route POST /api/ai/story-briefing
