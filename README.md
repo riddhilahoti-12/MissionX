@@ -170,6 +170,12 @@ missionx/
   - **Live AI Tutor Chatbot Micro-Engine (`aiChatbotService.js`)**: Multi-LLM AI Tutor service connecting OpenAI (`OPENAI_API_KEY`) and Google Gemini (`GEMINI_API_KEY`) APIs with live prompt resolution (`POST /api/ai/chat`).
   - **LLM Model Specifications Engine**: Dynamic model specifications badge detailing context windows (128k vs 1M+), target latency (45ms–150ms), multimodal capabilities, and cost specs for GPT-4o, GPT-4o-mini, Gemini 1.5 Pro, and Gemini 1.5 Flash.
   - **Floating HUD AI Tutor Widget (`AiTutorChatbot.tsx`)**: Interactive floating chatbot co-pilot HUD with live model selector dropdown, specification modal, and Web Speech API voice synthesis.
+- **Day 25:**
+  - **Quantum Ekert91 Entangled Qubit Pairs Visualizer (`Ekert91EntanglementPuzzle.tsx`)**: EPR quantum cryptography visualizer measuring Bell state singlet pairs ($\frac{|00\rangle + |11\rangle}{\sqrt{2}}$) and verifying CHSH inequality violation ($S = 2\sqrt{2} \approx 2.82$) to detect eavesdroppers.
+  - **Raft Joint Consensus Cluster Membership Reconfiguration (`RaftJointConsensusPuzzle.tsx`)**: Two-phase Joint Consensus simulator executing transitions ($C_{\text{old,new}} \to C_{\text{new}}$) to add/remove server nodes without split-brain failures.
+- **Day 26 (26-Day Master Platinum Edition Completion):**
+  - **Terraform & Helm Multi-Cloud Infrastructure Suite (`/terraform/main.tf` & `/helm/Chart.yaml`)**: Automated Infrastructure-as-Code (IaC) and Kubernetes Helm chart specs for AWS EKS, GCP GKE, and Azure AKS deployment.
+  - **Automated E2E 26-Day Master System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 26 Days of interactive CS puzzles, WebSockets multiplayer, and REST API microservices.
 
 ---
 
