@@ -182,6 +182,11 @@ missionx/
 - **Day 28 (28-Day Master Diamond Edition Finalization):**
   - **Prometheus & Grafana System Observability Telemetry Suite (`/monitoring/prometheus.yml` & `/monitoring/grafana-dashboard.json`)**: Production monitoring setup scraping microservice latency metrics, WebSocket active room connections, MQTT payload throughput, and AI API response times.
   - **Automated E2E 28-Day Master System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 28 Days of interactive CS puzzles, WebSockets multiplayer, and REST API microservices.
+- **Day 29:**
+  - **Quantum Shor's Algorithm Prime Factorization Visualizer (`ShorsAlgorithmPuzzle.tsx`)**: Quantum computing visualizer executing Quantum Fourier Transform (QFT) period-finding ($f(x) = a^x \bmod N$) to factor RSA 2048-bit semiprime keys.
+  - **Distributed Multi-Paxos State Machine Replication (`MultiPaxosPuzzle.tsx`)**: Distributed systems visualizer using a Stable Leader to execute 1-RTT Phase 2 Accept/Commit pipelines, bypassing Phase 1 prepare round-trips for $10\times$ throughput.
+- **Day 30 (30-Day Grand Milestone Crown Edition Finalization):**
+  - **Automated E2E 30-Day Grand Master System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 30 Days of interactive CS puzzles, WebSockets multiplayer synchronization, OpenAI/Gemini AI Tutor Chatbot, and REST API microservices.
 
 ---
 
