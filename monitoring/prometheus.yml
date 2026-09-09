@@ -1,0 +1,17 @@
+# MissionX Prometheus Metrics Telemetry Configuration
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'missionx-backend'
+    static_configs:
+      - targets: ['localhost:5000']
+
+  - job_name: 'missionx-frontend'
+    static_configs:
+      - targets: ['localhost:3000']
+
+  - job_name: 'mosquitto-mqtt'
+    static_configs:
+      - targets: ['localhost:1883']
