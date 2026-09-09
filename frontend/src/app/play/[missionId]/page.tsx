@@ -31,6 +31,8 @@ import Ekert91EntanglementPuzzle from '@/components/puzzles/Ekert91EntanglementP
 import RaftJointConsensusPuzzle from '@/components/puzzles/RaftJointConsensusPuzzle';
 import DifferentialPrivacyPuzzle from '@/components/puzzles/DifferentialPrivacyPuzzle';
 import MoeRouterPuzzle from '@/components/puzzles/MoeRouterPuzzle';
+import ShorsAlgorithmPuzzle from '@/components/puzzles/ShorsAlgorithmPuzzle';
+import MultiPaxosPuzzle from '@/components/puzzles/MultiPaxosPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
@@ -100,7 +102,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | 'PRIVACY' | 'MOEROUTER' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | 'PRIVACY' | 'MOEROUTER' | 'SHORS' | 'MULTIPAXOS' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -1040,6 +1042,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'MOEROUTER' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <MoeRouterPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Quantum Shor's Algorithm Modal */}
+      {activePuzzle === 'SHORS' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <ShorsAlgorithmPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Distributed Multi-Paxos State Machine Modal */}
+      {activePuzzle === 'MULTIPAXOS' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <MultiPaxosPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
