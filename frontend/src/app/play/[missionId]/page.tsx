@@ -29,6 +29,8 @@ import HomomorphicEncryptionPuzzle from '@/components/puzzles/HomomorphicEncrypt
 import VectorRagPuzzle from '@/components/puzzles/VectorRagPuzzle';
 import Ekert91EntanglementPuzzle from '@/components/puzzles/Ekert91EntanglementPuzzle';
 import RaftJointConsensusPuzzle from '@/components/puzzles/RaftJointConsensusPuzzle';
+import DifferentialPrivacyPuzzle from '@/components/puzzles/DifferentialPrivacyPuzzle';
+import MoeRouterPuzzle from '@/components/puzzles/MoeRouterPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
@@ -98,7 +100,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | 'PRIVACY' | 'MOEROUTER' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -1011,6 +1013,33 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'RAFTJOINT' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <RaftJointConsensusPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Differential Privacy Laplace Noise Modal */}
+      {activePuzzle === 'PRIVACY' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <DifferentialPrivacyPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* LLM Mixture-of-Experts (MoE) Router Modal */}
+      {activePuzzle === 'MOEROUTER' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <MoeRouterPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
