@@ -176,6 +176,12 @@ missionx/
 - **Day 26 (26-Day Master Platinum Edition Completion):**
   - **Terraform & Helm Multi-Cloud Infrastructure Suite (`/terraform/main.tf` & `/helm/Chart.yaml`)**: Automated Infrastructure-as-Code (IaC) and Kubernetes Helm chart specs for AWS EKS, GCP GKE, and Azure AKS deployment.
   - **Automated E2E 26-Day Master System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 26 Days of interactive CS puzzles, WebSockets multiplayer, and REST API microservices.
+- **Day 27:**
+  - **Differential Privacy ($\epsilon, \delta$) Laplace Noise Injection Visualizer (`DifferentialPrivacyPuzzle.tsx`)**: Zero-trust privacy visualizer injecting Laplace noise ($\text{Lap}(\Delta f / \epsilon)$) into database statistical queries to prevent re-identification linkage attacks.
+  - **LLM Mixture-of-Experts (MoE) Softmax Gating Router (`MoeRouterPuzzle.tsx`)**: Sparse deep learning visualizer computing Top-K Softmax routing weights ($G(x) = \text{Softmax}(\text{TopK}(x \cdot W_g, k))$) to dispatch tokens to 8 domain Expert Networks.
+- **Day 28 (28-Day Master Diamond Edition Finalization):**
+  - **Prometheus & Grafana System Observability Telemetry Suite (`/monitoring/prometheus.yml` & `/monitoring/grafana-dashboard.json`)**: Production monitoring setup scraping microservice latency metrics, WebSocket active room connections, MQTT payload throughput, and AI API response times.
+  - **Automated E2E 28-Day Master System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 28 Days of interactive CS puzzles, WebSockets multiplayer, and REST API microservices.
 
 ---
 
