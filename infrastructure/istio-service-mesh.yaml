@@ -1,0 +1,67 @@
+# MissionX Enterprise Istio Service Mesh & Envoy Proxy Architecture Specification
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: missionx-gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: MUTUAL
+        serverCertificate: /etc/certs/server.pem
+        privateKey: /etc/certs/private.key
+        caCertificates: /etc/certs/root-ca.pem
+      hosts:
+        - "missionx.edu"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: missionx-virtual-service
+  namespace: default
+spec:
+  hosts:
+    - "missionx.edu"
+  gateways:
+    - istio-system/missionx-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /api
+      route:
+        - destination:
+            host: missionx-backend-service
+            subset: v1
+          weight: 90
+        - destination:
+            host: missionx-backend-service
+            subset: v2-canary
+          weight: 10
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: missionx-destination-rule
+  namespace: default
+spec:
+  host: missionx-backend-service
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    connectionPool:
+      tcp:
+        maxConnections: 1024
+      http:
+        http1MaxPendingRequests: 100
+        maxRequestsPerConnection: 10
+    outlierDetection:
+      consecutive5xxErrors: 3
+      interval: 10s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
