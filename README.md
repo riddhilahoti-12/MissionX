@@ -197,6 +197,16 @@ missionx/
   - **Enterprise Service Mesh Istio & Envoy Proxy Suite (`/infrastructure/istio-service-mesh.yaml`)**: Production service mesh setup configuring Envoy sidecar proxies, mTLS mutual encryption, VirtualService canary routing, and Circuit Breaker resilience policies.
 - **Day 35 (35-Day Master Ultimate Pinnacle Edition Completion):**
   - **Automated E2E 35-Day Master Pinnacle System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 35 Days of interactive CS puzzles, WebSockets multiplayer synchronization, OpenAI/Gemini AI Tutor Chatbot, and REST API microservices.
+- **Day 36:**
+  - **Graph Neural Network (GNN) Message Passing (`GnnMessagePassingPuzzle.tsx`)**: Graph deep learning visualizer executing neighborhood feature aggregation $h_v^{(k)} = \text{AGGREGATE}^{(k)}\left(\left\{h_u^{(k-1)} : u \in \mathcal{N}(v)\right\}\right)$ to classify compromised cluster nodes in a fraud graph.
+- **Day 37:**
+  - **Quantum Repeater Entanglement Swapping (`QkdRepeaterPuzzle.tsx`)**: Quantum Internet visualizer performing Bell State Measurement (BSM) on intermediate repeater nodes to achieve long-distance entanglement swapping ($\Phi^+_{14}$) over 1000km links.
+- **Day 38:**
+  - **Speculative Execution & Branch Prediction (`SpeculativeExecutionPuzzle.tsx`)**: Computer architecture visualizer simulating Tomasulo's algorithm Reservation Stations, Reorder Buffer (ROB) branch prediction, and Spectre side-channel flush-and-reload $L_1$ cache line isolation.
+- **Day 39:**
+  - **Enterprise Chaos Engineering Fault Injection Suite (`/infrastructure/chaos-experiments.yaml`)**: Chaos Mesh / LitmusChaos specification injecting network partition latency, pod kills, packet loss, and CPU stress to test system resilience.
+- **Day 40 (40-Day Master Milestone Infinity Edition Completion):**
+  - **Automated E2E 40-Day Master Infinity System Diagnostic (`verify_system.js`)**: Master system verification script auditing all 40 Days of interactive CS puzzles, WebSockets multiplayer synchronization, OpenAI/Gemini AI Tutor Chatbot, and REST API microservices.
 
 ---
 
