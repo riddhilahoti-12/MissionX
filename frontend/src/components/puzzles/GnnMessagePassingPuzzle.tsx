@@ -38,7 +38,7 @@ export default function GnnMessagePassingPuzzle({ onSolve, onClose }: GnnMessage
       </div>
 
       <p className="text-xs font-mono text-slate-300 leading-relaxed bg-slate-950 p-4 rounded-2xl border border-slate-800">
-        Attackers disguised compromised server nodes inside the datacenter topology graph. Aggregate 2-hop neighborhood feature vectors h_v^(k) = &sigma;(W &bull; COMBINE(h_v^(k-1), AGG({h_u}))) to classify fraud nodes.
+        Attackers disguised compromised server nodes inside the datacenter topology graph. Aggregate 2-hop neighborhood feature vectors h_v^(k) = &sigma;(W &bull; COMBINE(h_v^(k-1), AGG(&#123;h_u&#125;))) to classify fraud nodes.
       </p>
 
       {/* GNN Message Passing Display */}
