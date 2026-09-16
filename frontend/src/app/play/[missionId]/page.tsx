@@ -38,6 +38,7 @@ import SpannerTrueTimePuzzle from '@/components/puzzles/SpannerTrueTimePuzzle';
 import DiffusionGenerativePuzzle from '@/components/puzzles/DiffusionGenerativePuzzle';
 import GnnMessagePassingPuzzle from '@/components/puzzles/GnnMessagePassingPuzzle';
 import QkdRepeaterPuzzle from '@/components/puzzles/QkdRepeaterPuzzle';
+import SpeculativeExecutionPuzzle from '@/components/puzzles/SpeculativeExecutionPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
@@ -107,7 +108,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | 'PRIVACY' | 'MOEROUTER' | 'SHORS' | 'MULTIPAXOS' | 'VQE' | 'SPANNER' | 'DIFFUSION' | 'GNN' | 'QKDREPEATER' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | 'PRIVACY' | 'MOEROUTER' | 'SHORS' | 'MULTIPAXOS' | 'VQE' | 'SPANNER' | 'DIFFUSION' | 'GNN' | 'QKDREPEATER' | 'SPECULATIVE' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
@@ -1114,6 +1115,46 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
       {activePuzzle === 'DIFFUSION' && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <DiffusionGenerativePuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(4);
+              setSolenoidLocked(false);
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Graph Neural Network (GNN) Message Passing Modal */}
+      {activePuzzle === 'GNN' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <GnnMessagePassingPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Quantum Repeater Entanglement Swapping Modal */}
+      {activePuzzle === 'QKDREPEATER' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <QkdRepeaterPuzzle
+            onClose={() => setActivePuzzle(null)}
+            onSolve={() => {
+              setStage(Math.max(stage, 3));
+              setActivePuzzle(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Speculative Execution & Branch Prediction Modal */}
+      {activePuzzle === 'SPECULATIVE' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <SpeculativeExecutionPuzzle
             onClose={() => setActivePuzzle(null)}
             onSolve={() => {
               setStage(4);
