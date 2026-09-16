@@ -1,0 +1,62 @@
+# MissionX Enterprise Chaos Engineering Resilience Architecture Specification
+# Powered by Chaos Mesh / LitmusChaos Fault Injection Engine
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: missionx-network-partition-delay
+  namespace: default
+spec:
+  action: delay
+  mode: all
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: missionx-backend
+  delay:
+    latency: '250ms'
+    jitter: '50ms'
+    correlation: '50'
+  direction: to
+  duration: '5m'
+  scheduler:
+    cron: '*/30 * * * *'
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: missionx-microservice-pod-kill
+  namespace: default
+spec:
+  action: pod-kill
+  mode: fixed-percent
+  value: '25%'
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: missionx-backend
+  scheduler:
+    cron: '0 */2 * * *'
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: missionx-cpu-memory-stress
+  namespace: default
+spec:
+  mode: one
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: missionx-backend
+  stressors:
+    cpu:
+      workers: 4
+      load: 90
+    memory:
+      workers: 2
+      size: '512MB'
+  duration: '3m'
