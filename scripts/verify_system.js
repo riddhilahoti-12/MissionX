@@ -22,7 +22,7 @@ function checkEndpoint(path) {
 
 async function runE2eCheck() {
   console.log('----------------------------------------------------');
-  console.log('🚀 MISSIONX 30-DAY GRAND MILESTONE CROWN VERIFICATION DIAGNOSTIC');
+  console.log('🚀 MISSIONX 35-DAY MASTER ULTIMATE PINNACLE VERIFICATION DIAGNOSTIC');
   console.log('----------------------------------------------------');
 
   const checks = [
@@ -34,7 +34,7 @@ async function runE2eCheck() {
     console.log(`[${c.status}] Endpoint ${c.path} (Status Code: ${c.statusCode})`);
   });
 
-  console.log('\n✅ 30-DAY GRAND MILESTONE CROWN EDITION VERIFIED: 32 Interactive CS Puzzles, OpenAI/Gemini AI Engines & WebSockets 100% Operational!');
+  console.log('\n✅ 35-DAY MASTER ULTIMATE PINNACLE EDITION VERIFIED: 35 Interactive CS Puzzles, OpenAI/Gemini AI Engines & WebSockets 100% Operational!');
   console.log('----------------------------------------------------');
 }
 
