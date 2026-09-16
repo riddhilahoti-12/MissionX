@@ -36,6 +36,7 @@ import MultiPaxosPuzzle from '@/components/puzzles/MultiPaxosPuzzle';
 import VqeMoleculePuzzle from '@/components/puzzles/VqeMoleculePuzzle';
 import SpannerTrueTimePuzzle from '@/components/puzzles/SpannerTrueTimePuzzle';
 import DiffusionGenerativePuzzle from '@/components/puzzles/DiffusionGenerativePuzzle';
+import GnnMessagePassingPuzzle from '@/components/puzzles/GnnMessagePassingPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
 import { io, Socket } from 'socket.io-client';
@@ -105,7 +106,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
   const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   // Active Interactive Puzzle Modal State
-  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | 'PRIVACY' | 'MOEROUTER' | 'SHORS' | 'MULTIPAXOS' | 'VQE' | 'SPANNER' | 'DIFFUSION' | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<'ASTAR' | 'NEURAL' | 'SQL' | 'RFID' | 'SUBNET' | 'TREE' | 'CIPHER' | 'SQLJOIN' | 'PAGEREPLACEMENT' | 'KNAPSACK' | 'GRAPH' | 'MINIMAX' | 'QUANTUM' | 'CNN' | 'AST' | 'RAFT' | 'POW' | 'MAPREDUCE' | 'PAXOS' | 'ZKP' | 'FEDERATED' | 'BTREE' | 'RAFTSNAPSHOT' | 'AUTOENCODER' | 'ATTENTION' | 'PBFT' | 'HOMOMORPHIC' | 'VECTORRAG' | 'EKERT91' | 'RAFTJOINT' | 'PRIVACY' | 'MOEROUTER' | 'SHORS' | 'MULTIPAXOS' | 'VQE' | 'SPANNER' | 'DIFFUSION' | 'GNN' | null>(null);
 
   // Interactive Puzzle States
   const [astarPath, setAstarPath] = useState<number[]>([0]);
