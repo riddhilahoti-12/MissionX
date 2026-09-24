@@ -27,21 +27,53 @@ router.post('/generate-hint', (req, res) => {
   }
 });
 
-// @route POST /api/ai/chat
-// Live AI Tutor Chatbot for student doubts and assistance
-router.post('/chat', async (req, res) => {
+// @route POST /api/ai/chat or /api/ai/tutor
+// Live Dynamic AI Tutor Chatbot with full mission & CO context
+const handleTutorChat = async (req, res) => {
   try {
-    const { prompt, model, domain, stage } = req.body;
-    const chatData = await generateTutorChatResponse({ prompt, model, domain, stage });
+    const {
+      prompt,
+      model,
+      missionId,
+      missionTitle,
+      domain,
+      difficulty,
+      courseOutcomes,
+      environment,
+      description,
+      history,
+      isInitial,
+      stage,
+    } = req.body;
+
+    const chatData = await generateTutorChatResponse({
+      prompt,
+      model,
+      missionId,
+      missionTitle,
+      domain,
+      difficulty,
+      courseOutcomes,
+      environment,
+      description,
+      history,
+      isInitial,
+      stage,
+    });
+
     res.json(chatData);
   } catch (error) {
+    console.error('[AI Tutor Route Error]:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to process AI tutor chat prompt',
       error: error.message,
     });
   }
-});
+};
+
+router.post('/chat', handleTutorChat);
+router.post('/tutor', handleTutorChat);
 
 // @route GET /api/ai/models
 // Get available OpenAI and Gemini LLM model specifications

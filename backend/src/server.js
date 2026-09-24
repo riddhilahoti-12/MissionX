@@ -48,16 +48,18 @@ app.use(loggerMiddleware);
 // Connect Primary Database
 connectDB();
 
-// Connect MQTT Telemetry Bridge
-initMQTT(server);
-
 // Connect Real-Time Socket.io Engine
 const io = new Server(server, {
   cors: corsOptions,
 });
 setupGameSockets(io);
 
-// 5. System Health Check Endpoint
+// Connect MQTT Telemetry Bridge with Socket.io instance
+initMQTT(io);
+
+// 5. Favicon & System Health Check Endpoints
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ONLINE',
@@ -75,6 +77,9 @@ app.get('/api/health', (req, res) => {
 // 6. Mount API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/missions', missionRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/chat', aiRoutes);
+app.use('/api/tutor', aiRoutes);
 
 // 7. Handle 404 Routes & Global Errors
 app.use(notFoundHandler);

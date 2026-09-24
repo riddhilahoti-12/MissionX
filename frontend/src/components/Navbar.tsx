@@ -26,6 +26,10 @@ export default function Navbar() {
             <Shield className="w-4 h-4 text-cyan-400" />
             Dashboard
           </a>
+          <a href="/simulator" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+            <Cpu className="w-4 h-4 text-cyan-300" />
+            Simulator
+          </a>
           <a href="/missions" className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-1.5">
             <Activity className="w-4 h-4 text-purple-400" />
             Missions

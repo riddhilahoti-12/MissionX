@@ -284,6 +284,12 @@ export default function MissionsPage() {
 
                 <a
                   href={`/play/${mission.id}`}
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      sessionStorage.setItem('missionx_active_mission', mission.id);
+                      window.dispatchEvent(new CustomEvent('missionx:mission-changed', { detail: mission.id }));
+                    }
+                  }}
                   className="w-full py-3 rounded-xl font-bold font-mono text-xs bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 flex items-center justify-center space-x-2 shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-all transform hover:-translate-y-0.5"
                 >
                   <span>LAUNCH MISSION BRIEFING</span>

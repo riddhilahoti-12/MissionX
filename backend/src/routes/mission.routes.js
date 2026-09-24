@@ -111,10 +111,49 @@ router.get('/', async (req, res) => {
   }
 });
 
+const { getMQTTClient } = require('../config/mqtt');
+
 // @route GET /api/missions/:id
 router.get('/:id', async (req, res) => {
   const mission = DEFAULT_MISSIONS.find((m) => m._id === req.params.id) || DEFAULT_MISSIONS[0];
   res.json({ success: true, mission });
+});
+
+// @route POST /api/missions/telemetry
+// Publish simulated sensor telemetry to MQTT broker & WebSocket session
+router.post('/telemetry', (req, res) => {
+  try {
+    const { roomId = 'ROOM_101', sensorType = 'RFID', value = 'TAG_CARD_ASTAR_7', sensorId = 'SENSOR_01' } = req.body;
+    const mqttClient = getMQTTClient();
+
+    const payload = JSON.stringify({
+      sensorId: sensorId || `${sensorType}_01`,
+      sensorType,
+      value,
+      timestamp: new Date().toISOString(),
+    });
+
+    const topic = `missionx/room/${roomId}/sensor`;
+
+    if (mqttClient && mqttClient.connected) {
+      mqttClient.publish(topic, payload);
+      return res.json({
+        success: true,
+        message: `Telemetry published to MQTT topic ${topic}`,
+        topic,
+        payload: JSON.parse(payload),
+      });
+    }
+
+    res.json({
+      success: true,
+      message: `Simulated telemetry queued for ${roomId}`,
+      topic,
+      payload: JSON.parse(payload),
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to dispatch telemetry', error: error.message });
+  }
 });
 
 module.exports = router;

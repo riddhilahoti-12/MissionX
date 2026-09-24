@@ -15,17 +15,14 @@ import {
   ArrowRight,
   Zap,
 } from 'lucide-react';
-
 export default function ProfilePage() {
   const [selectedAvatar, setSelectedAvatar] = useState('agent_cyber_blue');
-
   const AVATARS = [
-    { id: 'agent_cyber_blue', name: 'Agent Cyber Blue', icon: '👤' },
+    { id: 'agent_cyber_blue', name: 'Veeresh', icon: '👤' },
     { id: 'neon_valkyrie', name: 'Neon Valkyrie', icon: '🦸‍♀️' },
     { id: 'quantum_sentinel', name: 'Quantum Sentinel', icon: '🤖' },
     { id: 'instructor_pro', name: 'Instructor Pro', icon: '🎓' },
   ];
-
   const BADGES = [
     { name: 'A* Pathfinding Master', icon: '🤖', date: 'Aug 2026' },
     { name: 'Neural Calibrator', icon: '🧠', date: 'Aug 2026' },
@@ -53,7 +50,7 @@ export default function ProfilePage() {
             </div>
             <div className="space-y-1">
               <div className="flex items-center space-x-3">
-                <h1 className="text-2xl sm:text-3xl font-black text-white">Agent Maverick</h1>
+                <h1 className="text-2xl sm:text-3xl font-black text-white">Veeresh</h1>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
                   LEVEL 8 CYBER ARCHITECT
                 </span>
@@ -95,7 +92,6 @@ export default function ProfilePage() {
             <span className="text-2xl font-black text-emerald-400 mt-1 block">12 Missions</span>
           </div>
         </div>
-
         {/* Avatars & Badges Showcase (2 Columns) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Avatar Selector (5 Columns) */}

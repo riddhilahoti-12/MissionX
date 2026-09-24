@@ -13,18 +13,43 @@ export default function SimulatorPage() {
 
   const [solenoidLocked, setSolenoidLocked] = useState(true);
 
-  const handlePublishTelemetry = () => {
-    const newLog = {
-      id: Date.now(),
-      text: `Published Sensor [${sensorType}] -> Value: "${sensorValue}" for Room [${roomId}]`,
-      time: new Date().toLocaleTimeString(),
-      type: 'success',
-    };
-    setLogHistory((prev) => [newLog, ...prev]);
+  const handlePublishTelemetry = async () => {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    try {
+      const res = await fetch(`${backendUrl}/api/missions/telemetry`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomId,
+          sensorType,
+          value: sensorValue,
+        }),
+      });
+      const data = await res.json();
 
-    // Simulate lock trigger if correct RFID tag used
-    if (sensorValue.includes('ASTAR_7') || sensorValue.includes('UNLOCK')) {
-      setSolenoidLocked(false);
+      const newLog = {
+        id: Date.now(),
+        text: `📡 MQTT Broadcast: [${sensorType}] -> "${sensorValue}" (Room: ${roomId})`,
+        time: new Date().toLocaleTimeString(),
+        type: 'success',
+      };
+      setLogHistory((prev) => [newLog, ...prev]);
+
+      // Trigger lock state if unlock keycard or command injected
+      if (sensorValue.includes('ASTAR_7') || sensorValue.includes('UNLOCK')) {
+        setSolenoidLocked(false);
+      }
+    } catch (err: any) {
+      const errorLog = {
+        id: Date.now(),
+        text: `Local Telemetry Queued: [${sensorType}] -> "${sensorValue}"`,
+        time: new Date().toLocaleTimeString(),
+        type: 'info',
+      };
+      setLogHistory((prev) => [errorLog, ...prev]);
+      if (sensorValue.includes('ASTAR_7') || sensorValue.includes('UNLOCK')) {
+        setSolenoidLocked(false);
+      }
     }
   };
 

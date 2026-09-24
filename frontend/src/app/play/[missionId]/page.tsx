@@ -41,6 +41,7 @@ import QkdRepeaterPuzzle from '@/components/puzzles/QkdRepeaterPuzzle';
 import SpeculativeExecutionPuzzle from '@/components/puzzles/SpeculativeExecutionPuzzle';
 import { soundEngine } from '@/components/audio/SoundEffectsEngine';
 import { aiVoiceNarrator } from '@/components/audio/AiVoiceNarrator';
+import { getMissionById, MissionContext } from '@/data/missionsCatalog';
 import { io, Socket } from 'socket.io-client';
 import {
   Shield,
@@ -81,6 +82,8 @@ interface TeamPlayer {
 }
 
 export default function MissionPlayPage({ params }: MissionPlayProps) {
+  const missionConfig: MissionContext = getMissionById(params.missionId);
+
   // Cinematic Intro Countdown State
   const [countdown, setCountdown] = useState<number | null>(5);
   const [showBriefing, setShowBriefing] = useState(true);
@@ -188,13 +191,13 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
     }
 
     if (objectName.includes('RFID')) {
-      setActivePuzzle('RFID');
-    } else if (objectName.includes('A* Search')) {
-      setActivePuzzle('ASTAR');
-    } else if (objectName.includes('Neural')) {
-      setActivePuzzle('NEURAL');
-    } else if (objectName.includes('SQL')) {
-      setActivePuzzle('SQL');
+      setActivePuzzle((missionConfig.consoleBindings.rfid.puzzleKey as any) || 'RFID');
+    } else if (objectName.includes('A* Search') || objectName.includes('Mainframe') || objectName.includes('Server')) {
+      setActivePuzzle((missionConfig.consoleBindings.mainframe.puzzleKey as any) || 'ASTAR');
+    } else if (objectName.includes('Neural') || objectName.includes('Hologram')) {
+      setActivePuzzle((missionConfig.consoleBindings.hologram.puzzleKey as any) || 'NEURAL');
+    } else if (objectName.includes('SQL') || objectName.includes('Database') || objectName.includes('Console') || objectName.includes('Vault') || objectName.includes('Door')) {
+      setActivePuzzle((missionConfig.consoleBindings.database.puzzleKey as any) || 'SQL');
     }
   };
 
@@ -208,7 +211,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          domain: 'ARTIFICIAL_INTELLIGENCE',
+          domain: missionConfig.domain,
           stage,
           tier,
           failedAttempts: 1,
@@ -221,15 +224,15 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
         setActiveAiHint(data.hintText);
         setSecondsLeft((prev) => Math.max(0, prev - data.penaltyMinutes * 60));
       } else {
-        setActiveAiHint('[AI Assistant] Focus on verifying node distances against target parameters.');
+        setActiveAiHint(`[AI Assistant] In ${missionConfig.domain} Stage ${stage}: Verify input parameters against target constraints.`);
       }
     } catch (err) {
-      // Offline / fallback hint
+      const primaryCO = missionConfig.courseOutcomes[0] || 'Core Mechanics';
       const fallback = tier === 1 
-        ? '[AI Subtle Clue] Recall f(n) = g(n) + h(n). Calculate straight line distance.'
+        ? `[AI Socratic Clue] Target: ${primaryCO}. Examine the governing relation in ${missionConfig.domain}.`
         : tier === 2 
-        ? '[AI Technical Hint] Manhattan distance is |2-5| + |1-5| = 7. Select option 7.'
-        : '[AI Solution Step] Swipe RFID Card Tag 7 or click A* Option h(n)=7 to disengage lock.';
+        ? `[AI Technical Hint] Stage ${stage} requires satisfying target constraints. Inspect the active console.`
+        : `[AI Solution Step] Execute the parameter override on the active 3D console to advance to the next stage.`;
       setActiveAiHint(fallback);
     } finally {
       setIsGeneratingHint(false);
@@ -285,21 +288,21 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
           <div className="max-w-2xl space-y-8 animate-fade-in">
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-red-500/20 border border-red-500/50 text-xs font-mono text-red-400">
               <Volume2 className="w-4 h-4 animate-bounce" />
-              <span>EMERGENCY BROADCAST TRANSMISSION</span>
+              <span>EMERGENCY BROADCAST TRANSMISSION // {missionConfig.domain.toUpperCase()}</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
-              A CYBER ATTACK HAS DISABLED <br />
+              {missionConfig.emergencyTitle} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-300 to-cyan-400">
-                CITY EMERGENCY COMMUNICATIONS
+                {missionConfig.emergencySubtitle}
               </span>
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-mono bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
-              Hospitals cannot receive critical patient telemetry. Autonomous emergency drones are malfunctioning. Thousands of lives depend on your team.
+              {missionConfig.emergencyBriefing}
               <br />
               <span className="text-cyan-400 font-bold block mt-2">
-                MISSION: Restore A* Pathfinding, recalibrate Neural Threat Weights, and unlock the Solenoid Vault Door.
+                TARGET: {missionConfig.targetSystem} • Learning Outcomes: {missionConfig.courseOutcomes.join(' | ')}
               </span>
             </p>
 
@@ -334,9 +337,11 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
             </div>
             <div>
               <span className="block text-sm font-black text-white uppercase tracking-wider">
-                MISSION: {params.missionId.toUpperCase()}
+                MISSION: {missionConfig.missionTitle}
               </span>
-              <span className="text-[11px] font-mono text-slate-400">Target: Quantum AI Command Vault</span>
+              <span className="text-[11px] font-mono text-cyan-400">
+                [{missionConfig.domain}] Target: {missionConfig.targetSystem}
+              </span>
             </div>
           </div>
 
@@ -369,7 +374,7 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
           {/* 3D WebGL Canvas Viewport (8 Columns) */}
           <div className="lg:col-span-8 flex flex-col space-y-4">
             <div className="relative w-full h-[520px]">
-              <EscapeRoomCanvas onObjectClick={handleObjectClick} stage={stage} />
+              <EscapeRoomCanvas onObjectClick={handleObjectClick} stage={stage} environmentTheme={missionConfig.environmentTheme} />
             </div>
           </div>
 
@@ -405,62 +410,44 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
             {/* Stage Objectives Checklist */}
             <div className="glass-panel p-5 rounded-2xl border-purple-500/20 space-y-3">
               <h3 className="text-xs font-mono uppercase text-purple-400 tracking-wider font-bold flex items-center justify-between">
-                <span>Room Objectives</span>
+                <span>Room Objectives ({missionConfig.domain})</span>
                 <Sparkles className="w-4 h-4 text-purple-400" />
               </h3>
 
               <div className="space-y-2 font-mono text-xs">
-                <div
-                  onClick={() => setActivePuzzle('RFID')}
-                  className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                    stage >= 1 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-400'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>1. Verify RFID Keycard</span>
-                  </div>
-                  <span className="text-[10px] text-emerald-400 font-bold">DONE</span>
-                </div>
+                {missionConfig.stages.map((stg) => {
+                  const isPast = stage > stg.stageNumber;
+                  const isCurrent = stage === stg.stageNumber;
+                  const isLocked = stage < stg.stageNumber;
 
-                <div
-                  onClick={() => setActivePuzzle('ASTAR')}
-                  className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                    astarSolved ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-700 text-slate-200'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    <Cpu className="w-4 h-4 text-indigo-400" />
-                    <span>2. A* Pathfinding Grid</span>
-                  </div>
-                  <span className="text-[10px] font-bold">{astarSolved ? 'SOLVED' : 'ACTIVE'}</span>
-                </div>
-
-                <div
-                  onClick={() => setActivePuzzle('NEURAL')}
-                  className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                    neuralSolved ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-400'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    <Zap className="w-4 h-4 text-cyan-400" />
-                    <span>3. Calibrate Neural Weights</span>
-                  </div>
-                  <span className="text-[10px] font-bold">{neuralSolved ? 'SOLVED' : 'LOCKED'}</span>
-                </div>
-
-                <div
-                  onClick={() => setActivePuzzle('SQL')}
-                  className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                    sqlSolved ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-400'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    {solenoidLocked ? <Lock className="w-4 h-4 text-red-400" /> : <Unlock className="w-4 h-4 text-emerald-400" />}
-                    <span>4. Unlock Solenoid Vault</span>
-                  </div>
-                  <span className="text-[10px] font-bold">{sqlSolved ? 'ESCAPED' : 'FINAL'}</span>
-                </div>
+                  return (
+                    <div
+                      key={stg.stageNumber}
+                      onClick={() => setActivePuzzle(stg.puzzleKey as any)}
+                      className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                        isPast
+                          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                          : isCurrent
+                          ? 'bg-cyan-500/10 border-cyan-500/40 text-cyan-200 shadow-[0_0_10px_rgba(0,240,255,0.15)]'
+                          : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        {isPast ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        ) : isCurrent ? (
+                          <Cpu className="w-4 h-4 text-cyan-400 animate-pulse" />
+                        ) : (
+                          <Lock className="w-4 h-4 text-slate-600" />
+                        )}
+                        <span className="font-semibold">{stg.title}</span>
+                      </div>
+                      <span className="text-[10px] font-bold">
+                        {isPast ? 'SOLVED' : isCurrent ? 'ACTIVE' : 'LOCKED'}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -537,6 +524,45 @@ export default function MissionPlayPage({ params }: MissionPlayProps) {
           >
             RETURN TO 3D VAULT
           </button>
+        </div>
+      )}
+
+      {/* RFID Keycard Authentication Modal */}
+      {activePuzzle === 'RFID' && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-panel p-6 rounded-3xl border-emerald-500/40 max-w-md w-full space-y-6">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Shield className="w-5 h-5 text-emerald-400" />
+                RFID Keycard Verification
+              </h3>
+              <button onClick={() => setActivePuzzle(null)} className="text-slate-400 hover:text-white">✕</button>
+            </div>
+
+            <p className="text-xs text-slate-300 font-mono leading-relaxed">
+              Authenticate field agent credentials for {missionConfig.missionTitle} [{missionConfig.domain}].
+            </p>
+
+            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 font-mono text-xs space-y-2 text-center">
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest block">TARGET FREQUENCY TAG</span>
+              <span className="text-lg font-bold text-emerald-400">TAG_CARD_{missionConfig.domain.toUpperCase()}_01</span>
+              <span className="text-[11px] text-slate-400 block">Status: READY FOR HARDWARE SENSOR OR DIGITAL SWIPE</span>
+            </div>
+
+            <button
+              onClick={() => {
+                soundEngine.playUnlockChime();
+                setStage((prev) => Math.max(prev, 2));
+                setActivePuzzle(null);
+                if (socket) {
+                  socket.emit('stage_cleared', { sessionCode: 'ROOM_101', stageNumber: 1, clearedBy: 'Agent Maverick' });
+                }
+              }}
+              className="w-full py-3 rounded-xl font-bold font-mono text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+            >
+              SWIPE DIGITAL KEYCARD & UNLOCK STAGE 2
+            </button>
+          </div>
         </div>
       )}
 
