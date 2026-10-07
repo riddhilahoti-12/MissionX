@@ -1,35 +1,37 @@
-// Load environment variables immediately at startup
+// Load environment variables immediately
 require('dotenv').config();
 
 const http = require('http');
 const express = require('express');
-const { Server } = require('socket.io');
 const cors = require('cors');
 const helmet = require('helmet');
 
 const connectDB = require('./config/db');
-const { initMQTT } = require('./config/mqtt');
-const setupGameSockets = require('./sockets/gameSocket');
-
 const loggerMiddleware = require('./middleware/logger');
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 
+// Route Handlers
 const authRoutes = require('./routes/auth.routes');
-const missionRoutes = require('./routes/mission.routes');
-const aiRoutes = require('./routes/ai.routes');
+const subjectRoutes = require('./routes/subject.routes');
+const { router: questionRoutes } = require('./routes/question.routes');
+const progressRoutes = require('./routes/progress.routes');
+const sensorRoutes = require('./routes/sensor.routes');
+
+// Initialize simulated sensor service
+require('./services/sensorService');
 
 const app = express();
 const server = http.createServer(app);
 
-// 1. Security Middleware (Helmet HTTP Headers)
+// 1. Security Headers
 app.use(
   helmet({
-    contentSecurityPolicy: false, // Disabled for WebSocket & MQTT local dev compatibility
+    contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   })
 );
 
-// 2. Cross-Origin Resource Sharing (CORS Configuration)
+// 2. CORS Configuration
 const corsOptions = {
   origin: process.env.CLIENT_ORIGIN || '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -38,61 +40,51 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// 3. Body Parsing Middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// 3. Body Parsing
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
-// 4. Request Logging Middleware (Morgan Custom Format)
+// 4. Request Logging
 app.use(loggerMiddleware);
 
-// Connect Primary Database
+// 5. Connect Database
 connectDB();
 
-// Connect Real-Time Socket.io Engine
-const io = new Server(server, {
-  cors: corsOptions,
-});
-setupGameSockets(io);
-
-// Connect MQTT Telemetry Bridge with Socket.io instance
-initMQTT(io);
-
-// 5. Favicon & System Health Check Endpoints
+// 6. System Health Check
 app.get('/favicon.ico', (req, res) => res.status(204).end());
-
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ONLINE',
-    system: 'MissionX Real-Time Express Engine',
+    system: 'MissionX Educational Sensor & Quiz Platform',
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
     services: {
       database: 'CONNECTED',
-      mqttBroker: 'ACTIVE',
-      webSockets: 'ACTIVE',
+      sensorService: 'ACTIVE',
+      quizEngine: 'ACTIVE',
     },
   });
 });
 
-// 6. Mount API Routes
+// 7. Mount Core API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/missions', missionRoutes);
-app.use('/api/ai', aiRoutes);
-app.use('/api/chat', aiRoutes);
-app.use('/api/tutor', aiRoutes);
+app.use('/api/subjects', subjectRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/quiz', progressRoutes);
+app.use('/api/progress', progressRoutes);
+app.use('/api/sensor', sensorRoutes);
 
-// 7. Handle 404 Routes & Global Errors
+// 8. 404 & Global Error Handlers
 app.use(notFoundHandler);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`=======================================================`);
-  console.log(`🚀 MissionX Server listening on HTTP://localhost:${PORT}`);
+  console.log(`🚀 MissionX Educational Platform listening on HTTP://localhost:${PORT}`);
   console.log(`⚙️  Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🛡️  Security Headers (Helmet): ACTIVE`);
-  console.log(`🌐 CORS Allowed Origin: ${process.env.CLIENT_ORIGIN || '*'}`);
-  console.log(`📝 Logger Middleware: ACTIVE`);
+  console.log(`🌡️  Single Simulated Sensor: ACTIVE (Ambient Temperature)`);
+  console.log(`📚 Core Subjects: Data Structures, DBMS, OS, Networks`);
   console.log(`=======================================================`);
 });
 
